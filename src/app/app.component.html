@@ -1,0 +1,7 @@
+<div class="wrapper">
+    <app-navigation></app-navigation>
+    <app-home *ngIf="select === 'Home'"></app-home>
+    <app-search *ngIf="select === 'Search'"></app-search>
+    <app-collections *ngIf="select === 'Collections'"></app-collections>
+    <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,22 @@
+app-navigation {
+    width: fit-content;
+    height: 100vh;
+    background-color: brown;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+
+
+app-home {
+  text-align: center;
+}
+
+app-search {
+  text-align: center;
+}
+
+app-collections {
+  text-align: center;
+}
