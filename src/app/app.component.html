@@ -1,5 +1,5 @@
 <div class="wrapper">
-    <app-navigation></app-navigation>
+    <app-navigation (onChanged)="onSelectChanged($event)"></app-navigation>
     <app-home *ngIf="select === 'Home'"></app-home>
     <app-search *ngIf="select === 'Search'"></app-search>
     <app-collections *ngIf="select === 'Collections'"></app-collections>

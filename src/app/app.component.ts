@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  title = "fanfiction-search";
   public select = "Collections";
 
   public onSelectChanged (newSelect: string) : void {
