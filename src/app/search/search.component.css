@@ -1,0 +1,18 @@
+.Input {
+    width: 80%;
+}
+
+.submit {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    background-color: blue;
+}
+
+.Output {
+    margin-top: 5%;
+    margin-left: 20%;
+    justify-content: center;
+    justify-self: center;
+    align-items: center;
+}

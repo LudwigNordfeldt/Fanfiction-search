@@ -14,7 +14,9 @@ app-home {
 }
 
 app-search {
-  text-align: center;
+  margin-left: 40%;
+  align-items: center;
+  justify-content: center;
 }
 
 app-collections {

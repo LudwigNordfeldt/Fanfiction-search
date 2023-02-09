@@ -1,1 +1,58 @@
-<p> search works! </p>
+<mat-grid-list class="Input" cols="2" rowHeight="60pt">
+    <mat-grid-tile
+    *ngFor="let tile of tiles"
+    [colspan]="tile.cols"
+    [rowspan]="tile.rows"
+    [style.align-items]="'center'">
+
+    <mat-form-field>
+        <mat-label> {{tile.text}} </mat-label>
+        <input  *ngIf="tile.multiple != true and tile.textArea != true" 
+        matInput>
+        <textarea *ngIf="tile.textArea === true" 
+        matInput
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="5" ></textarea>
+        <form *ngIf="tile.multiple === true" cdk-scrollable>
+            <mat-label>{{tile.text}}</mat-label>
+            <mat-form-field class="chip-list" appearance="fill" cdk-scrollable>
+              <mat-chip-grid #chipGrid cdk-scrollable>
+                <mat-chip-row *ngFor="let tag of tags" (removed)="remove(tag)">
+                  {{tag}}
+                  <button matChipRemove [attr.aria-label]="'remove ' + tag">
+                    <mat-icon>c</mat-icon>
+                  </button>
+                </mat-chip-row>
+              </mat-chip-grid>
+              <input placeholder="New Tag..." #tagInput
+                [matChipInputFor]="chipGrid"
+                (matChipInputTokenEnd)="add($event)"/>
+            </mat-form-field>
+          </form>
+    </mat-form-field>
+
+    </mat-grid-tile>
+    
+    <button class = "submit">
+        Submit
+    </button>
+
+    <mat-grid-tile *ngFor="let fic of mockResults" colspan="2" rowspan="1" class="Output">
+        <mat-card>
+            <mat-card-title> {{fic.title}} </mat-card-title>
+            <mat-card-subtitle> {{fic.author}} </mat-card-subtitle>
+            <mat-chip-grid>
+                <mat-chip-row *ngFor="let tag in fic.tags">
+                    {{tag}}
+                </mat-chip-row>
+            </mat-chip-grid>
+            <mat-card-content>
+                {{fic.summary}}
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+
+</mat-grid-list>
+
