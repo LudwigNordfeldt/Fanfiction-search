@@ -10,14 +10,16 @@ import { CollectionsComponent } from './collections/collections.component';
 import { NavigationComponent } from './navigation/navigation.component';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatButtonModule } from '@angular/material/button'; 
-import { MatIconModule } from '@angular/material/icon'; 
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
-import { TextFieldModule } from '@angular/cdk/text-field'; 
+import { TextFieldModule } from '@angular/cdk/text-field';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -28,18 +30,20 @@ import { TextFieldModule } from '@angular/cdk/text-field';
     NavigationComponent
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     MatButtonModule,
     MatIconModule,
     MatInputModule,
     MatSidenavModule,
-    BrowserAnimationsModule,
-    FormsModule,
     MatGridListModule,
     MatCardModule,
     MatChipsModule,
-    TextFieldModule
+    TextFieldModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]

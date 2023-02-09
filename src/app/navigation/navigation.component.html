@@ -2,10 +2,10 @@
 
     <div class="navContent" #b>
       <button mat-icon-button color="accent" aria-label="Example icon button with a menu icon" (click)="drawer.toggle()">
-        <mat-icon>M</mat-icon>
+        <mat-icon>menu</mat-icon>
       </button>
     </div>
-  
+
     <mat-drawer #drawer class="navDrawer" mode="side">
       <ul>
         <li> <button mat-button (click)="selectChange('Home')"> Home </button></li>
@@ -13,5 +13,5 @@
         <li> <button mat-button (click)="selectChange('Collections')"> Collections</button></li>
       </ul>
     </mat-drawer>
-  
+
 </mat-drawer-container>

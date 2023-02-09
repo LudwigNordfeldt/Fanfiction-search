@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { COMMA, ENTER } from '@angular/cdk/keycodes'
 
 export interface Fic {
   title: string;
@@ -23,6 +24,7 @@ export interface Tile {
 })
 
 export class SearchComponent {
+  separatorKeyCodes = [ENTER, COMMA] as const;
   mockResults: Fic[] = [
     { title: 'Blood and Iron', author: 'Fire Lord Sozin', tags: ['Imperialism', 'Propaganda'], summary: 'Where some see harmony, others see tyranny. Where some see balance, others see stratification. The longest dark age in human history is being ended by enlightened Fire Nation.' },
     { title: 'Love from the Ashes of War', author: 'Minion of Set', tags: ['Hurt&comfort', 'Romance'], summary: 'Her fate is left in the Avatars gentle hands.' },

@@ -5,6 +5,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.css']
 })
+
 export class NavigationComponent {
   public select!: string;
 
