@@ -1,16 +1,16 @@
-<mat-grid-list class="Input" cols="2" rowHeight="60pt">
+<mat-grid-list class="Input" cols="2" rowHeight="80pt">
   <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows" [style.align-items]="'center'">
 
     <mat-label> {{tile.text}} </mat-label>
 
     <mat-form-field *ngIf="!tile.multiple && !tile.textArea">
-      <input matInput>
+      <input matInput placeholder="{{ 'Enter ' + tile.text}}">
     </mat-form-field>
 
 
     <mat-form-field *ngIf="tile.textArea">
       <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" placeholder="{{ 'Enter' + tile.text }}"></textarea>
     </mat-form-field>
 
       <div *ngIf="tile.multiple">
@@ -29,13 +29,13 @@
   </mat-grid-tile>
 
   <mat-grid-tile>
-    <button class="submit" mat-button color="primary">
+    <button class="submit" mat-button color="primary" (click)="getFanfiction()">
       Submit
     </button>
   </mat-grid-tile>
 
-  <mat-grid-tile *ngFor="let fic of mockResults" colspan="2" rowspan="1" class="Output">
-    <mat-card>
+  <mat-grid-tile *ngFor="let fic of fic" colspan="2" rowspan="2" class="Output">
+    <mat-card style="width: max-content;">
       <mat-card-title> {{fic.title}} </mat-card-title>
       <mat-card-subtitle> {{fic.author}} </mat-card-subtitle>
       <mat-chip-listbox>

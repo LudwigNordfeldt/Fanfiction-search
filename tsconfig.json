@@ -22,7 +22,27 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "paths" : {
+      "child_process": ["./node_modules/child_process"],
+      "crypto": ["./node_modules/crypto-browserify"],
+      "stream": ["./node_modules/stream-browserify"],
+      "assert": ["./node_modules/assert"],
+      "http": ["./node_modules/stream-http"],
+      "https": ["./node_modules/https-browserify"],
+      "os": ["./node_modules/os-browserify"],
+      "process": ["./node_modules/process"],
+      "fs": ["./node_modules/fs.realpath"],
+      "path": ["./node_modules/path-browserify"],
+      "util": ["./node_modules/util"],
+      "constants": ["./node_modules/constants-browserify"],
+      "net": ["./node_modules/net"],
+      "tls": ["./node_modules/tls"],
+      "zlib": ["./node_modules/zlib"],
+      "module": ["./node_modules/module"],
+      "readline": ["./node_modules/readline"],
+      "fs/promises": ["./node_modules/fs.realpath"],
+  }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

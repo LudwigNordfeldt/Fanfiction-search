@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes'
+import { getFics } from './searchWebService';
 
 export interface Fic {
   title: string;
@@ -24,6 +25,7 @@ export interface Tile {
 })
 
 export class SearchComponent {
+  public fic: Fic[] = [];
   separatorKeyCodes = [ENTER, COMMA] as const;
   mockResults: Fic[] = [
     { title: 'Blood and Iron', author: 'Fire Lord Sozin', tags: ['Imperialism', 'Propaganda'], summary: 'Where some see harmony, others see tyranny. Where some see balance, others see stratification. The longest dark age in human history is being ended by enlightened Fire Nation.' },
@@ -31,6 +33,20 @@ export class SearchComponent {
     { title: 'Salvage', author: 'The Muffin Lance', tags: ['Fluff', 'Hurt&comfort'], summary: 'Hakoda rescues certain 13 years old banished prince.' },
     { title: 'Saga of Sun and Moon', author: 'Charles', tags: ['Drama','Adventure'], summary: 'Choice made echoes and alters te whole story of Gaang adventures.' },
   ];
+
+  async getFanfiction () {
+    let g = new getFics();
+    const f = await g.getFictions();
+    var promise:Promise<Fic[]> = new Promise((resolve) => {
+      resolve(f);
+      });
+
+      setTimeout(()=>{
+      promise.then((data:Fic[]) => {
+        this.fic = data;
+      });
+    }, 1000);
+  }
 
   tiles: Tile[] = [
     { cols: 1, rows: 1, text: 'Title' },
