@@ -7,6 +7,8 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
@@ -19,11 +21,8 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "lib": [
-      "ES2022",
-      "dom"
-    ],
-    "paths" : {
+    "lib": ["ES2022", "dom"],
+    "paths": {
       "child_process": ["./node_modules/child_process"],
       "crypto": ["./node_modules/crypto-browserify"],
       "stream": ["./node_modules/stream-browserify"],
@@ -41,13 +40,32 @@
       "zlib": ["./node_modules/zlib"],
       "module": ["./node_modules/module"],
       "readline": ["./node_modules/readline"],
-      "fs/promises": ["./node_modules/fs.realpath"],
-  }
+      "fs/promises": ["./node_modules/fs.realpath"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
+  },
+
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "strict": true,
+      "esModuleInterop": true,
+      "noImplicitAny": true,
+      "sourceMap": true,
+      "outDir": "dist",
+      "forceConsistentCasingInFileNames": true,
+      "strictPropertyInitialization": false,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "paths": {
+        "*": ["node_modules/*"]
+      }
+    },
+    "exclude": ["node_modules"]
   }
 }

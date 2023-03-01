@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes'
-import { getFics } from './searchWebService';
+//import { getFics } from './searchWebService';
 
 export interface Fic {
   title: string;
@@ -35,17 +35,17 @@ export class SearchComponent {
   ];
 
   async getFanfiction () {
-    let g = new getFics();
-    const f = await g.getFictions();
-    var promise:Promise<Fic[]> = new Promise((resolve) => {
-      resolve(f);
-      });
+  //   let g = new getFics();
+  //   const f = await g.getFictions();
+  //   var promise:Promise<Fic[]> = new Promise((resolve) => {
+  //     resolve(f);
+  //     });
 
-      setTimeout(()=>{
-      promise.then((data:Fic[]) => {
-        this.fic = data;
-      });
-    }, 1000);
+  //     setTimeout(()=>{
+  //     promise.then((data:Fic[]) => {
+  //       this.fic = data;
+  //     });
+  //   }, 1000);
   }
 
   tiles: Tile[] = [
