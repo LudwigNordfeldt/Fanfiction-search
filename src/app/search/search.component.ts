@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes'
-//import { getFics } from './searchWebService';
+import { HttpClient } from '@angular/common/http';
 
 export interface Fic {
   title: string;
@@ -25,7 +25,7 @@ export interface Tile {
 })
 
 export class SearchComponent {
-  public fic: Fic[] = [];
+  public fic:any = [];
   separatorKeyCodes = [ENTER, COMMA] as const;
   mockResults: Fic[] = [
     { title: 'Blood and Iron', author: 'Fire Lord Sozin', tags: ['Imperialism', 'Propaganda'], summary: 'Where some see harmony, others see tyranny. Where some see balance, others see stratification. The longest dark age in human history is being ended by enlightened Fire Nation.' },
@@ -34,18 +34,12 @@ export class SearchComponent {
     { title: 'Saga of Sun and Moon', author: 'Charles', tags: ['Drama','Adventure'], summary: 'Choice made echoes and alters te whole story of Gaang adventures.' },
   ];
 
-  async getFanfiction () {
-  //   let g = new getFics();
-  //   const f = await g.getFictions();
-  //   var promise:Promise<Fic[]> = new Promise((resolve) => {
-  //     resolve(f);
-  //     });
+  constructor(private http: HttpClient) {}
 
-  //     setTimeout(()=>{
-  //     promise.then((data:Fic[]) => {
-  //       this.fic = data;
-  //     });
-  //   }, 1000);
+  async getFanfiction () {
+  this.http.get('http://localhost:3000/getFictions').subscribe(res => {
+    this.fic = res;
+  })
   }
 
   tiles: Tile[] = [
@@ -61,13 +55,9 @@ export class SearchComponent {
 
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
-
-    // Add our tag
     if (value) {
       this.tags.push(value);
     }
-
-    // Clear the input value
     event.chipInput!.clear();
   }
 

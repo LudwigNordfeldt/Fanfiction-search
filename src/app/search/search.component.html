@@ -1,4 +1,4 @@
-<mat-grid-list class="Input" cols="2" rowHeight="80pt">
+<mat-grid-list class="Input" cols="2" rowHeight="120pt">
   <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows" [style.align-items]="'center'">
 
     <mat-label> {{tile.text}} </mat-label>
@@ -34,19 +34,22 @@
     </button>
   </mat-grid-tile>
 
-  <mat-grid-tile *ngFor="let fic of fic" colspan="2" rowspan="2" class="Output">
-    <mat-card style="width: max-content;">
-      <mat-card-title> {{fic.title}} </mat-card-title>
-      <mat-card-subtitle> {{fic.author}} </mat-card-subtitle>
-      <mat-chip-listbox>
-        <mat-chip-row *ngFor="let tag of fic.tags">
-          {{tag}}
-        </mat-chip-row>
-      </mat-chip-listbox>
-      <mat-card-content>
-        {{fic.summary}}
-      </mat-card-content>
-    </mat-card>
-  </mat-grid-tile>
+
+    <mat-grid-tile *ngFor="let fic of fic" colspan="2" rowspan="3" class="Output">
+
+        <mat-card style="width: 70%; margin-left: 20%;" role="article">
+          <mat-card-title> {{fic.title}} </mat-card-title>
+          <mat-card-subtitle> {{fic.author}} </mat-card-subtitle>
+          <mat-chip-listbox>
+            <mat-chip-row *ngFor="let tag of fic.tags">
+              {{tag}}
+            </mat-chip-row>
+          </mat-chip-listbox>
+          <mat-card-content>
+            {{fic.summary}}
+          </mat-card-content>
+        </mat-card>
+
+    </mat-grid-tile>
 
 </mat-grid-list>
