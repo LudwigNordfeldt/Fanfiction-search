@@ -25,6 +25,14 @@ export interface Tile {
 })
 
 export class SearchComponent {
+  page = 1;
+  numOfFics?: number;
+  pageSize = 5;
+
+  handlePageChange(event: number) {
+    this.page = event;
+  }
+
   public fic:any = [];
   separatorKeyCodes = [ENTER, COMMA] as const;
   mockResults: Fic[] = [
@@ -39,6 +47,7 @@ export class SearchComponent {
   async getFanfiction () {
   this.http.get('http://localhost:3000/getFictions').subscribe(res => {
     this.fic = res;
+    this.numOfFics = this.fic.length;
   })
   }
 

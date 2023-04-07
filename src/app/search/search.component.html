@@ -34,9 +34,10 @@
     </button>
   </mat-grid-tile>
 
-
-    <mat-grid-tile *ngFor="let fic of fic" colspan="2" rowspan="3" class="Output">
-
+    <mat-grid-tile *ngFor="let fic of fic| paginate: {
+    itemsPerPage: pageSize,
+    currentPage: page,
+    totalItems: numOfFics }" colspan="2" rowspan="3" class="Output">
         <mat-card style="width: 70%; margin-left: 20%;" role="article">
           <mat-card-title> {{fic.title}} </mat-card-title>
           <mat-card-subtitle> {{fic.author}} </mat-card-subtitle>
@@ -50,6 +51,12 @@
           </mat-card-content>
         </mat-card>
 
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)">
+
+      </pagination-controls>
     </mat-grid-tile>
 
 </mat-grid-list>
