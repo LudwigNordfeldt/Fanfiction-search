@@ -26,6 +26,9 @@ export interface Tile {
 
 export class SearchComponent {
   page = 1;
+  FicTitle?: string;
+  FicAuthor?: string;
+  FicSummary?: string;
   numOfFics?: number;
   pageSize = 5;
 
@@ -44,15 +47,16 @@ export class SearchComponent {
 
   constructor(private http: HttpClient) {}
 
-  async getFanfiction () {
-  this.http.get('http://localhost:3000/getFictions').subscribe(res => {
-    this.fic = res;
-    this.numOfFics = this.fic.length;
-  })
+  async getFanfiction (FicTitle?: string, FicAuthor?: string, FicSummary?: string, FicTags?: string[]) {
+    this.http.post('http://localhost:3000/getFictions', {FicTitle, FicAuthor, FicSummary, FicTags}).subscribe(res => {
+      console.log(res);
+      this.fic = res;
+      this.numOfFics = this.fic.length;
+    });
   }
 
   tiles: Tile[] = [
-    { cols: 1, rows: 1, text: 'Title' },
+    { cols: 1, rows: 1, text: 'FicTitle' },
     { cols: 1, rows: 1, text: 'Author'},
     { cols: 2, rows: 1, text: 'Tags', multiple: true},
     { cols: 2, rows: 1, text: 'Summary', textArea: true }

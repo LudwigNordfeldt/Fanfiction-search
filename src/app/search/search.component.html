@@ -1,16 +1,16 @@
 <mat-grid-list class="Input" cols="2" rowHeight="120pt">
-  <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows" [style.align-items]="'center'">
+  <!-- <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows" [style.align-items]="'center'">
 
     <mat-label> {{tile.text}} </mat-label>
 
     <mat-form-field *ngIf="!tile.multiple && !tile.textArea">
-      <input matInput placeholder="{{ 'Enter ' + tile.text}}">
+      <input matInput placeholder="{{ 'Enter ' + tile.text}}" [(ngModel)]="tile.text">
     </mat-form-field>
 
 
     <mat-form-field *ngIf="tile.textArea">
       <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" placeholder="{{ 'Enter' + tile.text }}"></textarea>
+        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" placeholder="{{ 'Enter' + tile.text }}" [(ngModel)]="tile.text"></textarea>
     </mat-form-field>
 
       <div *ngIf="tile.multiple">
@@ -26,10 +26,52 @@
           <input placeholder="New Tag..." #tagInput [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeyCodes" (matChipInputTokenEnd)="add($event)" />
         </mat-form-field>
       </div>
+  </mat-grid-tile> -->
+
+  <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
+
+    <mat-label> Title </mat-label>
+
+    <mat-form-field>
+      <input matInput placeholder="Enter title" [(ngModel)]="FicTitle">
+    </mat-form-field>
+
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
+    <mat-label> Author </mat-label>
+
+    <mat-form-field>
+      <input matInput placeholder="Enter author" [(ngModel)]="FicAuthor">
+    </mat-form-field>
+
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="2" [rowspan]="1" [style.align-items]="'center'">
+    <div>
+      <mat-form-field class="chip-list" appearance="fill">
+        <mat-chip-grid #chipGrid cdk-scrollable>
+          <mat-chip-row *ngFor="let tag of tags" (removed)="remove(tag)" [editable]="true">
+            {{tag}}
+            <button matChipRemove [attr.aria-label]="'remove ' + tag">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        </mat-chip-grid>
+        <input placeholder="New Tag..." #tagInput [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeyCodes" (matChipInputTokenEnd)="add($event)" />
+      </mat-form-field>
+    </div>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="2" [rowspan]="1" [style.align-items]="'center'">
+    <mat-form-field>
+      <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" placeholder="Enter summary" [(ngModel)]="FicSummary"></textarea>
+    </mat-form-field>
   </mat-grid-tile>
 
   <mat-grid-tile>
-    <button class="submit" mat-button color="primary" (click)="getFanfiction()">
+    <button class="submit" mat-button color="primary" (click)="getFanfiction(FicTitle, FicAuthor, FicSummary, tags)">
       Submit
     </button>
   </mat-grid-tile>
