@@ -38,7 +38,7 @@
 
   <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
 
-    <mat-label [style.font-size.pt]="12"> Title </mat-label>
+    <mat-label [style.font-size.pt]="14"> Title </mat-label>
 
     <mat-form-field>
       <input matInput placeholder="Enter title" [(ngModel)]="FicTitle">
@@ -47,7 +47,7 @@
   </mat-grid-tile>
 
   <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
-    <mat-label [style.font-size.pt]="12"> Author </mat-label>
+    <mat-label [style.font-size.pt]="14"> Author </mat-label>
 
     <mat-form-field>
       <input matInput placeholder="Enter author" [(ngModel)]="FicAuthor">
@@ -58,7 +58,7 @@
 
 
   <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
-    <mat-label [style.font-size.pt]="12"> Characters </mat-label>
+    <mat-label [style.font-size.pt]="14"> Characters </mat-label>
     <div>
       <mat-form-field class="chip-list" appearance="fill">
         <mat-chip-grid #charGrid cdk-scrollable>
@@ -78,7 +78,7 @@
 
 
   <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
-    <mat-label [style.font-size.pt]="12"> Relationships </mat-label>
+    <mat-label [style.font-size.pt]="14"> Relationships </mat-label>
     <div>
       <mat-form-field class="chip-list" appearance="fill">
         <mat-chip-grid #relsGrid cdk-scrollable>
@@ -97,7 +97,7 @@
 
 
   <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
-    <mat-label [style.font-size.pt]="12"> Additional Tags </mat-label>
+    <mat-label [style.font-size.pt]="14"> Additional Tags </mat-label>
     <div>
       <mat-form-field class="chip-list" appearance="fill">
         <mat-chip-grid #chipGrid cdk-scrollable>
@@ -117,15 +117,15 @@
 
 
   <mat-grid-tile [colspan]="3" [rowspan]="1" [style.align-items]="'center'">
-    <mat-label [style.font-size.pt]="12"> Summary </mat-label>
+    <mat-label [style.font-size.pt]="14"> Summary </mat-label>
     <mat-form-field>
       <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
         cdkAutosizeMaxRows="5" placeholder="Enter summary" [(ngModel)]="FicSummary"></textarea>
     </mat-form-field>
   </mat-grid-tile>
 
-  <mat-grid-tile>
-    <button class="submit" mat-button color="primary" (click)="getFanfiction(FicTitle, FicAuthor, FicSummary, tags, Fandom)">
+  <mat-grid-tile [colspan]="3" [rowspan]="1" [style.align-items]="'center'">
+    <button class="submit" mat-button color="primary" (click)="getFanfiction(FicTitle, FicAuthor, FicSummary, chars, rels, addTags, Fandom)">
       Submit
     </button>
   </mat-grid-tile>

@@ -48,8 +48,8 @@ export class SearchComponent {
 
   constructor(private http: HttpClient) {}
 
-  async getFanfiction (FicTitle?: string, FicAuthor?: string, FicSummary?: string, FicTags?: string[], Fandom?: string) {
-    this.http.post('http://localhost:3000/getFictions', {FicTitle, FicAuthor, FicSummary, FicTags, Fandom}).subscribe(res => {
+  async getFanfiction (FicTitle?: string, FicAuthor?: string, FicSummary?: string, FicChars?: string[], FicRels?: string[], FicTags?: string[], Fandom?: string) {
+    this.http.post('http://localhost:3000/getFictions', {FicTitle, FicAuthor, FicSummary, FicChars, FicRels, FicTags, Fandom}).subscribe(res => {
       this.fic = res;
       this.numOfFics = this.fic.length;
     });
