@@ -17,10 +17,10 @@ app.listen(port, () => {
 app.use(express.static(path.join(__dirname, "..", "dist", "fanfiction-search")))
 
 app.post('/getFictions', async(req:Request, res:Response) => {
-  let { FicTitle, FicAuthor, FicSummary, FicTags } = req.body;
+  let { FicTitle, FicAuthor, FicSummary, FicTags, Fandom } = req.body;
   const fic = new GetFics();
-  const fics = await fic.getFictions(FicTitle, FicAuthor, FicSummary, FicTags);
-  res.send({body:req.body, fics});
+  const fics = await fic.getFictions(FicTitle, FicAuthor, FicSummary, FicTags, Fandom);
+  res.send(fics);
 })
 
 app.get('*', async (req: Request, res: Response) => {

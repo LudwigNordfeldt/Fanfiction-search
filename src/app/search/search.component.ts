@@ -29,6 +29,7 @@ export class SearchComponent {
   FicTitle?: string;
   FicAuthor?: string;
   FicSummary?: string;
+  Fandom?: string;
   numOfFics?: number;
   pageSize = 5;
 
@@ -47,9 +48,8 @@ export class SearchComponent {
 
   constructor(private http: HttpClient) {}
 
-  async getFanfiction (FicTitle?: string, FicAuthor?: string, FicSummary?: string, FicTags?: string[]) {
-    this.http.post('http://localhost:3000/getFictions', {FicTitle, FicAuthor, FicSummary, FicTags}).subscribe(res => {
-      console.log(res);
+  async getFanfiction (FicTitle?: string, FicAuthor?: string, FicSummary?: string, FicTags?: string[], Fandom?: string) {
+    this.http.post('http://localhost:3000/getFictions', {FicTitle, FicAuthor, FicSummary, FicTags, Fandom}).subscribe(res => {
       this.fic = res;
       this.numOfFics = this.fic.length;
     });
@@ -63,13 +63,18 @@ export class SearchComponent {
   ]
 
   tags: string[] = [];
+  addTags: string[] = [];
+  chars: string[] = [];
+  rels: string[] = [];
+
   @ViewChild('tagInput')
   tagInput!: ElementRef<HTMLInputElement>;
+
 
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
     if (value) {
-      this.tags.push(value);
+      this.addTags.push(value);
     }
     event.chipInput!.clear();
   }
@@ -78,7 +83,45 @@ export class SearchComponent {
     const index = this.tags.indexOf(tag);
 
     if (index >= 0) {
-      this.tags.splice(index, 1);
+      this.addTags.splice(index, 1);
+    }
+  }
+
+  @ViewChild('charInput')
+  charInput!: ElementRef<HTMLInputElement>;
+
+  addChar(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    if (value) {
+      this.chars.push(value);
+    }
+    event.chipInput!.clear();
+  }
+
+  removeChar(tag: string): void {
+    const index = this.tags.indexOf(tag);
+
+    if (index >= 0) {
+      this.chars.splice(index, 1);
+    }
+  }
+
+  @ViewChild('relInput')
+  relInput!: ElementRef<HTMLInputElement>;
+
+  addRel(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    if (value) {
+      this.rels.push(value);
+    }
+    event.chipInput!.clear();
+  }
+
+  removeRel(tag: string): void {
+    const index = this.tags.indexOf(tag);
+
+    if (index >= 0) {
+      this.rels.splice(index, 1);
     }
   }
 }

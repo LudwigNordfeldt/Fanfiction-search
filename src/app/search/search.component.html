@@ -28,9 +28,17 @@
       </div>
   </mat-grid-tile> -->
 
+  <mat-grid-tile [colspan]="2" [rowspan]="1" [style.align-items]="'center'">
+    <mat-label [style.font-size.pt]="14"> Fandom </mat-label>
+
+    <mat-form-field>
+      <input matInput placeholder="Enter fandom" [(ngModel)]="Fandom">
+    </mat-form-field>
+  </mat-grid-tile>
+
   <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
 
-    <mat-label> Title </mat-label>
+    <mat-label [style.font-size.pt]="12"> Title </mat-label>
 
     <mat-form-field>
       <input matInput placeholder="Enter title" [(ngModel)]="FicTitle">
@@ -39,7 +47,7 @@
   </mat-grid-tile>
 
   <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
-    <mat-label> Author </mat-label>
+    <mat-label [style.font-size.pt]="12"> Author </mat-label>
 
     <mat-form-field>
       <input matInput placeholder="Enter author" [(ngModel)]="FicAuthor">
@@ -47,58 +55,102 @@
 
   </mat-grid-tile>
 
+
+
   <mat-grid-tile [colspan]="2" [rowspan]="1" [style.align-items]="'center'">
+    <mat-label [style.font-size.pt]="12"> Characters </mat-label>
     <div>
       <mat-form-field class="chip-list" appearance="fill">
-        <mat-chip-grid #chipGrid cdk-scrollable>
-          <mat-chip-row *ngFor="let tag of tags" (removed)="remove(tag)" [editable]="true">
+        <mat-chip-grid #charGrid cdk-scrollable>
+          <mat-chip-row *ngFor="let tag of chars" (removed)="remove(tag)" [editable]="true">
             {{tag}}
             <button matChipRemove [attr.aria-label]="'remove ' + tag">
               <mat-icon>cancel</mat-icon>
             </button>
           </mat-chip-row>
         </mat-chip-grid>
-        <input placeholder="New Tag..." #tagInput [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeyCodes" (matChipInputTokenEnd)="add($event)" />
+        <input placeholder="New character..." #charInput [matChipInputFor]="charGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeyCodes" (matChipInputTokenEnd)="addChar($event)" />
       </mat-form-field>
     </div>
   </mat-grid-tile>
 
+
+
   <mat-grid-tile [colspan]="2" [rowspan]="1" [style.align-items]="'center'">
+    <mat-label [style.font-size.pt]="12"> Relationships </mat-label>
+    <div>
+      <mat-form-field class="chip-list" appearance="fill">
+        <mat-chip-grid #relsGrid cdk-scrollable>
+          <mat-chip-row *ngFor="let tag of rels" (removed)="remove(tag)" [editable]="true">
+            {{tag}}
+            <button matChipRemove [attr.aria-label]="'remove ' + tag">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        </mat-chip-grid>
+        <input placeholder="New relationship..." #relInput [matChipInputFor]="relsGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeyCodes" (matChipInputTokenEnd)="addRel($event)" />
+      </mat-form-field>
+    </div>
+  </mat-grid-tile>
+
+
+  <mat-grid-tile [colspan]="2" [rowspan]="1" [style.align-items]="'center'">
+    <mat-label [style.font-size.pt]="12"> Additional Tags </mat-label>
+    <div>
+      <mat-form-field class="chip-list" appearance="fill">
+        <mat-chip-grid #chipGrid cdk-scrollable>
+          <mat-chip-row *ngFor="let tag of addTags" (removed)="remove(tag)" [editable]="true">
+            {{tag}}
+            <button matChipRemove [attr.aria-label]="'remove ' + tag">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        </mat-chip-grid>
+        <input placeholder="New Tag..." #tagInput [matChipInputFor]="chipGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeyCodes" (matChipInputTokenEnd)="add($event)" />
+      </mat-form-field>
+    </div>
+  </mat-grid-tile>
+
+
+
+  <mat-grid-tile [colspan]="2" [rowspan]="1" [style.align-items]="'center'">
+    <mat-label [style.font-size.pt]="12"> Summary </mat-label>
     <mat-form-field>
-      <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" placeholder="Enter summary" [(ngModel)]="FicSummary"></textarea>
+      <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="5" placeholder="Enter summary" [(ngModel)]="FicSummary"></textarea>
     </mat-form-field>
   </mat-grid-tile>
 
   <mat-grid-tile>
-    <button class="submit" mat-button color="primary" (click)="getFanfiction(FicTitle, FicAuthor, FicSummary, tags)">
+    <button class="submit" mat-button color="primary" (click)="getFanfiction(FicTitle, FicAuthor, FicSummary, tags, Fandom)">
       Submit
     </button>
   </mat-grid-tile>
 
-    <mat-grid-tile *ngFor="let fic of fic| paginate: {
+  <mat-grid-tile *ngFor="let fic of fic| paginate: {
     itemsPerPage: pageSize,
     currentPage: page,
     totalItems: numOfFics }" colspan="2" rowspan="3" class="Output">
-        <mat-card style="width: 70%; margin-left: 20%;" role="article">
-          <mat-card-title> {{fic.title}} </mat-card-title>
-          <mat-card-subtitle> {{fic.author}} </mat-card-subtitle>
-          <mat-chip-listbox>
-            <mat-chip-row *ngFor="let tag of fic.tags">
-              {{tag}}
-            </mat-chip-row>
-          </mat-chip-listbox>
-          <mat-card-content>
-            {{fic.summary}}
-          </mat-card-content>
-        </mat-card>
+    <mat-card style="width: 70%; margin-left: 20%;" role="article">
+      <mat-card-title> {{fic.title}} by {{fic.author}}</mat-card-title>
+      <mat-chip-listbox>
+        <mat-chip-row *ngFor="let tag of fic.tags">
+          {{tag}}
+        </mat-chip-row>
+      </mat-chip-listbox>
+      <mat-card-content [style]=" 'font-size: 14pt' ">
+        {{fic.summary}}
+      </mat-card-content>
+    </mat-card>
 
-    </mat-grid-tile>
+  </mat-grid-tile>
 
-    <mat-grid-tile>
-      <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)">
-
-      </pagination-controls>
-    </mat-grid-tile>
+  <mat-grid-tile *ngIf="fic.length > 1">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)">
+    </pagination-controls>
+  </mat-grid-tile>
 
 </mat-grid-list>
