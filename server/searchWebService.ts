@@ -1,7 +1,134 @@
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-extra';
 import { pageExtend } from 'puppeteer-jquery';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import { Page } from 'puppeteer';
+
+puppeteer.use(StealthPlugin());
 
 export class GetFics {
+  async getFandoms(text: string) {
+    if (!text?.length) {
+      return [];
+    }
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    const pageJQ = pageExtend(page);
+    const preliminaryAO3 = 'https://archiveofourown.org/works/search';
+
+    await pageJQ.goto(preliminaryAO3);
+
+    await pageJQ.type('#work_search_fandom_names_autocomplete', text);
+    await pageJQ.waitForjQuery(
+      "p:contains('No suggestions found'), #new_work_search > fieldset:nth-child(2) > dl > dd:nth-child(2) > ul > li > div > ul"
+    );
+    const fs = await pageJQ.$$(
+      '#new_work_search > fieldset:nth-child(2) > dl > dd:nth-child(2) > ul > li > div > ul > li'
+    );
+    return Promise.all(fs.map(async(f) => {
+        const ff = await f?.getProperty('textContent');
+        return ff?.toString().slice(9);
+      }));
+  }
+
+  async getTags(text: string) {
+    if (!text?.length) {
+      return [];
+    }
+
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    const pageJQ = pageExtend(page);
+    const preliminaryAO3 = 'https://archiveofourown.org/works/search';
+
+    await pageJQ.goto(preliminaryAO3);
+
+    await pageJQ.type('#work_search_freeform_names_autocomplete', text);
+    await pageJQ.waitForjQuery(
+      "p:contains('No suggestions found'), #new_work_search > fieldset:nth-child(2) > dl > dd:nth-child(14) > ul > li > div > ul"
+    );
+    const fs = await pageJQ.$$(
+      '#new_work_search > fieldset:nth-child(2) > dl > dd:nth-child(14) > ul > li > div > ul > li'
+    );
+    return Promise.all(fs.map(async(f) => {
+        const ff = await f?.getProperty('textContent');
+        return ff?.toString().slice(9);
+      }));
+  }
+
+  async getChars(text: string) {
+    if (!text?.length) {
+      return [];
+    }
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    const pageJQ = pageExtend(page);
+    const preliminaryAO3 = 'https://archiveofourown.org/works/search';
+
+    await pageJQ.goto(preliminaryAO3);
+
+    await pageJQ.type('#work_search_character_names_autocomplete', text);
+    await pageJQ.waitForjQuery(
+      "p:contains('No suggestions found'), #new_work_search > fieldset:nth-child(2) > dl > dd:nth-child(10) > ul > li > div > ul"
+    );
+    const fs = await pageJQ.$$(
+      '#new_work_search > fieldset:nth-child(2) > dl > dd:nth-child(10) > ul > li > div > ul > li'
+    );
+    return Promise.all(fs.map(async(f) => {
+        const ff = await f?.getProperty('textContent');
+        return ff?.toString().slice(9);
+      }));
+  }
+
+  async getRels(text: string) {
+    if (!text?.length) {
+      return [];
+    }
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    const pageJQ = pageExtend(page);
+    const preliminaryAO3 = 'https://archiveofourown.org/works/search';
+
+    await pageJQ.goto(preliminaryAO3);
+
+    await pageJQ.type('#work_search_relationship_names_autocomplete', text);
+    await pageJQ.waitForjQuery(
+      "p:contains('No suggestions found'), #new_work_search > fieldset:nth-child(2) > dl > dd:nth-child(12) > ul > li > div > ul"
+    );
+    const fs = await pageJQ.$$(
+      '#new_work_search > fieldset:nth-child(2) > dl > dd:nth-child(12) > ul > li > div > ul > li'
+    );
+    return Promise.all(fs.map(async(f) => {
+        const ff = await f?.getProperty('textContent');
+        return ff?.toString().slice(9);
+      }));
+  }
+
+  sanitizeString(str: string){
+    str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim,"");
+    return str.trim();
+  }
+
+  async getFicText(url:string) {
+    // Todo: url-validation if url starts with https:archiveofourown.org
+
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    const pageJQ = pageExtend(page);
+    await pageJQ.goto(url);
+
+    const textField = await page.$$("div[role='article'] > div > p");
+    let text = ''
+
+    for (let s of textField) {
+      const sText = await (await s.getProperty('textContent')).jsonValue()
+      text += sText;
+    }
+
+    text = this.sanitizeString(text);
+
+    return JSON.stringify(text)
+  }
+
   async getFictions(
     title: string,
     author: string,
@@ -14,41 +141,53 @@ export class GetFics {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     const pageJQ = pageExtend(page);
-    //const preliminary = 'https://api.scrapingant.com/v2/general?url=https%3A%2F%2Fwww.fanfiction.net%2Fsearch%2F%3Fpopup%3D1&x-api-key=bd4440017cdc4e33b2f925244fb3296c';
-    //await pageJQ.goto(preliminary);
 
-    //const e = await pageJQ.jQuery("#pcategoryid > option:contains('Cartoons')").attr("value");
+    const preliminaryAO3 = 'https://archiveofourown.org/works/search';
 
-    //console.log("The fandom id is", e);
+    const preliminaryFF = 'https://www.fanfiction.net/search/?popup=1';
+
+    const ao3url =
+      `https://archiveofourown.org/works/search?commit=Search&work_search%5Bquery%5D=` +
+      `${summary ?? ''}&work_search%5Btitle%5D=` +
+      `${title ?? ''}&work_search%5Bcreators%5D=` +
+      `${
+        author ?? ''
+      }&work_search%5Brevised_at%5D=&work_search%5Bcomplete%5D=&work_search%5Bcrossover%5D=&work_search%5Bsingle_chapter%5D=0&work_search%5Bword_count%5D=&work_search%5Blanguage_id%5D=&work_search%5Bfandom_names%5D=` +
+      `${
+        fandom ?? ''
+      }&work_search%5Brating_ids%5D=&work_search%5Bcharacter_names%5D=` +
+      `${characters?.join(',') ?? ''}&work_search%5Brelationship_names%5D=${
+        relationships?.map(rel => encodeURIComponent(rel))?.join(',') ?? ''
+      }` +
+      `&work_search%5Bfreeform_names%5D=` +
+      `${
+        filterTags?.join(',') ?? ''
+      }&work_search%5Bhits%5D=&work_search%5Bkudos_count%5D=&work_search%5Bcomments_count%5D=&work_search%5Bbookmarks_count%5D=&work_search%5Bsort_column%5D=_score&work_search%5Bsort_direction%5D=desc`;
 
     const fnurl = `https://www.fanfiction.net/search/?keywords=Fire+Nation&type=story&match=any&formatid=any&sort=0&genreid1=0&genreid2=0&characterid1=0&characterid2=0&characterid3=0&characterid4=0&words=0&ready=1&categoryid=2002#`;
 
-    // const ao3url = `https://archiveofourown.org/works/search?commit=Search&work_search%5Bquery%5D=` +
-    // `${summary ?? ""}&work_search%5Btitle%5D=` +
-    // `${title ?? ""}&work_search%5Bcreators%5D=` +
-    // `${author ?? ""}&work_search%5Brevised_at%5D=&work_search%5Bcomplete%5D=&work_search%5Bcrossover%5D=&work_search%5Bsingle_chapter%5D=0&work_search%5Bword_count%5D=&work_search%5Blanguage_id%5D=&work_search%5Bfandom_names%5D=` +
-    // `Avatar%3A+The+Last+Airbender&work_search%5Brating_ids%5D=&work_search%5Bcharacter_names%5D=Zuko+%28Avatar%29&work_search%5Brelationship_names%5D=&work_search%5Bfreeform_names%5D=` +
-    // `${filterTags?.join(",")??""}&work_search%5Bhits%5D=&work_search%5Bkudos_count%5D=&work_search%5Bcomments_count%5D=&work_search%5Bbookmarks_count%5D=&work_search%5Bsort_column%5D=_score&work_search%5Bsort_direction%5D=desc`;
-
-    const ao3url = `https://archiveofourown.org/works/search?commit=Search&work_search%5Bquery%5D=` +
-    `${summary ?? ""}&work_search%5Btitle%5D=` +
-    `${title ?? ""}&work_search%5Bcreators%5D=` +
-    `${author ?? ""}&work_search%5Brevised_at%5D=&work_search%5Bcomplete%5D=&work_search%5Bcrossover%5D=&work_search%5Bsingle_chapter%5D=0&work_search%5Bword_count%5D=&work_search%5Blanguage_id%5D=&work_search%5Bfandom_names%5D=` +
-    `${fandom ?? ""}&work_search%5Brating_ids%5D=&work_search%5Bcharacter_names%5D=` +
-    `${characters?.join(",")??""}&work_search%5Brelationship_names%5D=${relationships?.join(",")??""}` +
-    `&work_search%5Bfreeform_names%5D=` +
-    `${filterTags?.join(",")??""}&work_search%5Bhits%5D=&work_search%5Bkudos_count%5D=&work_search%5Bcomments_count%5D=&work_search%5Bbookmarks_count%5D=&work_search%5Bsort_column%5D=_score&work_search%5Bsort_direction%5D=desc`;
-
     await page.goto(ao3url);
+
+    let fics: Object[] = [];
+
+    await this.fetchFictions(fics, page)
+
+    await browser.close();
+    return fics;
+  }
+
+  async fetchFictions(fics: Object[], page: Page) {
     const nodes = await page.$$("li[role='article']");
-    let fics = [];
+
     for (let node of nodes) {
       try {
         let id = await (await node.getProperty('id')).jsonValue();
-        var heading = await page.$$(`#${id} > div > h4 > a`);
-        var name = await (
+        let heading = await page.$$(`#${id} > div > h4 > a`);
+        let name = await (
           await heading[0].getProperty('textContent')
         ).jsonValue();
+
+        let link = await (await heading[0].getProperty('href')).jsonValue();
 
         if (heading.length == 2) {
           var creator = await (
@@ -58,9 +197,9 @@ export class GetFics {
           let creator = 'Anonymous';
         }
 
-        var sumsec = await page.$$(`#${id} > blockquote > p`);
+        let sumsec = await page.$$(`#${id} > blockquote > p`);
         let sum = '';
-        var tags = await page.$$(`#${id} > ul > li > a`);
+        let tags = await page.$$(`#${id} > ul > li > a`);
         let ftags = [];
 
         for (let tag of tags) {
@@ -80,11 +219,11 @@ export class GetFics {
           author: creator!,
           tags: ftags,
           summary: sum,
+          url: link
         };
         fics.push(fanfiction);
       } catch (Exception) {}
     }
-    await browser.close();
-    return fics;
   }
+
 }

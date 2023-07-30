@@ -8,9 +8,9 @@
 
     <mat-drawer #drawer class="navDrawer" mode="side">
       <ul>
-        <li> <button mat-button (click)="selectChange('Home')"> Home </button></li>
-        <li> <button mat-button (click)="selectChange('Search')"> Search</button></li>
-        <li> <button mat-button (click)="selectChange('Collections')"> Collections</button></li>
+        <li> <button mat-button routerLink="/" > Home </button></li>
+        <li> <button mat-button routerLink="/search"> Search</button></li>
+        <li> <button mat-button routerLink="/collections"> Collections</button></li>
       </ul>
     </mat-drawer>
 

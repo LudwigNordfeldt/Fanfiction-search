@@ -1,13 +1,17 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { MatChipInput, MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes'
 import { HttpClient } from '@angular/common/http';
+import {FormControl} from '@angular/forms';
+import { Observable, startWith, map, switchMap, from, filter, tap, debounceTime } from 'rxjs';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 export interface Fic {
   title: string;
   author: string;
   tags: string[];
   summary: string;
+  url: string;
 }
 
 export interface Tile {
@@ -24,14 +28,58 @@ export interface Tile {
   styleUrls: ['./search.component.css']
 })
 
-export class SearchComponent {
+export class SearchComponent implements OnInit {
   page = 1;
   FicTitle?: string;
   FicAuthor?: string;
   FicSummary?: string;
+
   Fandom?: string;
+  FicChars?: string;
+  FicRels?: string;
+  FicTags?: string;
+
   numOfFics?: number;
+  NumRes?: number;
   pageSize = 5;
+
+  myControl = new FormControl('');
+  filteredOptions?: Observable<string[]>;
+
+  myTags = new FormControl('');
+  filteredTags?: Observable<string[]>;
+
+  myChars = new FormControl('');
+  filteredChars?: Observable<string[]>;
+
+  myRels = new FormControl('');
+  filteredRels?: Observable<string[]>;
+
+  ngOnInit() {
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      debounceTime(2000),
+      filter(value => !!value?.length && value.length > 0),
+      switchMap(value => this.http.get<string[]>("/getFandoms", {params: {text: value || ''}} )),
+    );
+
+    this.filteredTags = this.myTags.valueChanges.pipe(
+      debounceTime(2000),
+      filter(value => !!value?.length && value.length > 0),
+      switchMap(value => this.http.get<string[]>("/getTags", {params: {text: value || ''}} )),
+    );
+
+    this.filteredChars = this.myChars.valueChanges.pipe(
+      debounceTime(2000),
+      filter(value => !!value?.length && value.length > 0),
+      switchMap(value => this.http.get<string[]>("/getChars", {params: {text: value || ''}} )),
+    );
+
+    this.filteredRels = this.myRels.valueChanges.pipe(
+      debounceTime(2000),
+      filter(value => !!value?.length && value.length > 0),
+      switchMap(value => this.http.get<string[]>("/getRels", {params: {text: value || ''}} )),
+    );
+  }
 
   handlePageChange(event: number) {
     this.page = event;
@@ -39,15 +87,14 @@ export class SearchComponent {
 
   public fic:any = [];
   separatorKeyCodes = [ENTER, COMMA] as const;
-  mockResults: Fic[] = [
-    { title: 'Blood and Iron', author: 'Fire Lord Sozin', tags: ['Imperialism', 'Propaganda'], summary: 'Where some see harmony, others see tyranny. Where some see balance, others see stratification. The longest dark age in human history is being ended by enlightened Fire Nation.' },
-    { title: 'Love from the Ashes of War', author: 'Minion of Set', tags: ['Hurt&comfort', 'Romance'], summary: 'Her fate is left in the Avatars gentle hands.' },
-    { title: 'Salvage', author: 'The Muffin Lance', tags: ['Fluff', 'Hurt&comfort'], summary: 'Hakoda rescues certain 13 years old banished prince.' },
-    { title: 'Saga of Sun and Moon', author: 'Charles', tags: ['Drama','Adventure'], summary: 'Choice made echoes and alters te whole story of Gaang adventures.' },
-  ];
+  // mockResults: Fic[] = [
+  //   { title: 'Blood and Iron', author: 'Fire Lord Sozin', tags: ['Imperialism', 'Propaganda'], summary: 'Where some see harmony, others see tyranny. Where some see balance, others see stratification. The longest dark age in human history is being ended by enlightened Fire Nation.' },
+  //   { title: 'Love from the Ashes of War', author: 'Minion of Set', tags: ['Hurt&comfort', 'Romance'], summary: 'Her fate is left in the Avatars gentle hands.' },
+  //   { title: 'Salvage', author: 'The Muffin Lance', tags: ['Fluff', 'Hurt&comfort'], summary: 'Hakoda rescues certain 13 years old banished prince.' },
+  //   { title: 'Saga of Sun and Moon', author: 'Charles', tags: ['Drama','Adventure'], summary: 'Choice made echoes and alters te whole story of Gaang adventures.' },
+  // ];
 
   constructor(private http: HttpClient) {}
-
   async getFanfiction (FicTitle?: string, FicAuthor?: string, FicSummary?: string, FicChars?: string[], FicRels?: string[], FicTags?: string[], Fandom?: string) {
     this.http.post('http://localhost:3000/getFictions', {FicTitle, FicAuthor, FicSummary, FicChars, FicRels, FicTags, Fandom}).subscribe(res => {
       this.fic = res;
@@ -79,8 +126,16 @@ export class SearchComponent {
     event.chipInput!.clear();
   }
 
+  addClick(event: MatAutocompleteSelectedEvent): void {
+    const value = (event.option.value || '').trim();
+    if (value) {
+      this.addTags.push(value);
+    }
+    this.tagInput.nativeElement.value = ""
+  }
+
   remove(tag: string): void {
-    const index = this.tags.indexOf(tag);
+    const index = this.addTags.indexOf(tag);
 
     if (index >= 0) {
       this.addTags.splice(index, 1);
@@ -98,8 +153,16 @@ export class SearchComponent {
     event.chipInput!.clear();
   }
 
+  addCharClick(event: MatAutocompleteSelectedEvent): void {
+    const value = (event.option.value || '').trim();
+    if (value) {
+      this.chars.push(value);
+    }
+    this.charInput.nativeElement.value = ""
+  }
+
   removeChar(tag: string): void {
-    const index = this.tags.indexOf(tag);
+    const index = this.chars.indexOf(tag);
 
     if (index >= 0) {
       this.chars.splice(index, 1);
@@ -117,8 +180,16 @@ export class SearchComponent {
     event.chipInput!.clear();
   }
 
+  addRelClick(event: MatAutocompleteSelectedEvent): void {
+    const value = (event.option.value || '').trim();
+    if (value) {
+      this.rels.push(value);
+    }
+    this.relInput.nativeElement.value = ""
+  }
+
   removeRel(tag: string): void {
-    const index = this.tags.indexOf(tag);
+    const index = this.rels.indexOf(tag);
 
     if (index >= 0) {
       this.rels.splice(index, 1);

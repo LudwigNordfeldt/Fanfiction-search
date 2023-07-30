@@ -1,4 +1,4 @@
-<mat-grid-list class="Input" cols="3" rowHeight="120pt">
+<mat-grid-list class="Input" cols="3" rowHeight="100pt">
   <!-- <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows" [style.align-items]="'center'">
 
     <mat-label> {{tile.text}} </mat-label>
@@ -32,7 +32,13 @@
     <mat-label [style.font-size.pt]="14"> Fandom </mat-label>
 
     <mat-form-field>
-      <input matInput placeholder="Enter fandom" [(ngModel)]="Fandom">
+      <input matInput placeholder="Enter fandom" [(ngModel)]="Fandom" [matAutocomplete]="auto1"
+        [formControl]="myControl">
+      <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
   </mat-grid-tile>
 
@@ -62,15 +68,24 @@
     <div>
       <mat-form-field class="chip-list" appearance="fill">
         <mat-chip-grid #charGrid cdk-scrollable>
-          <mat-chip-row *ngFor="let tag of chars" (removed)="remove(tag)" [editable]="true">
+          <mat-chip-row *ngFor="let tag of chars" (removed)="removeChar(tag)" [editable]="true">
             {{tag}}
             <button matChipRemove [attr.aria-label]="'remove ' + tag">
               <mat-icon>cancel</mat-icon>
             </button>
           </mat-chip-row>
         </mat-chip-grid>
-        <input placeholder="New character..." #charInput [matChipInputFor]="charGrid"
-          [matChipInputSeparatorKeyCodes]="separatorKeyCodes" (matChipInputTokenEnd)="addChar($event)" />
+
+        <input matInput placeholder="New character..." [(ngModel)]="FicChars" [matAutocomplete]="auto2"
+          [formControl]="myChars" #charInput [matChipInputFor]="charGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeyCodes" (matChipInputTokenEnd)="addChar($event)">
+
+        <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete" (optionSelected)="addCharClick($event)">
+          <mat-option *ngFor="let char of filteredChars | async" [value]="char">
+            {{char}}
+          </mat-option>
+        </mat-autocomplete>
+
       </mat-form-field>
     </div>
   </mat-grid-tile>
@@ -82,15 +97,23 @@
     <div>
       <mat-form-field class="chip-list" appearance="fill">
         <mat-chip-grid #relsGrid cdk-scrollable>
-          <mat-chip-row *ngFor="let tag of rels" (removed)="remove(tag)" [editable]="true">
+          <mat-chip-row *ngFor="let tag of rels" (removed)="removeRel(tag)" [editable]="true">
             {{tag}}
             <button matChipRemove [attr.aria-label]="'remove ' + tag">
               <mat-icon>cancel</mat-icon>
             </button>
           </mat-chip-row>
         </mat-chip-grid>
-        <input placeholder="New relationship..." #relInput [matChipInputFor]="relsGrid"
-          [matChipInputSeparatorKeyCodes]="separatorKeyCodes" (matChipInputTokenEnd)="addRel($event)" />
+
+        <input matInput placeholder="New relationship..." [(ngModel)]="FicRels" [matAutocomplete]="auto3"
+          [formControl]="myRels" #relInput [matChipInputFor]="relsGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeyCodes" (matChipInputTokenEnd)="addRel($event)">
+        <mat-autocomplete autoActiveFirstOption #auto3="matAutocomplete" (optionSelected)="addRelClick($event)">
+          <mat-option *ngFor="let option of filteredRels | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+
       </mat-form-field>
     </div>
   </mat-grid-tile>
@@ -108,8 +131,16 @@
             </button>
           </mat-chip-row>
         </mat-chip-grid>
-        <input placeholder="New Tag..." #tagInput [matChipInputFor]="chipGrid"
-          [matChipInputSeparatorKeyCodes]="separatorKeyCodes" (matChipInputTokenEnd)="add($event)" />
+
+        <input matInput placeholder="New Tag..." [(ngModel)]="FicTags" [matAutocomplete]="auto4" [formControl]="myTags"
+          #tagInput [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
+          (matChipInputTokenEnd)="add($event)">
+        <mat-autocomplete autoActiveFirstOption #auto4="matAutocomplete" (optionSelected)="addClick($event)">
+          <mat-option *ngFor="let option of filteredTags | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+
       </mat-form-field>
     </div>
   </mat-grid-tile>
@@ -122,35 +153,42 @@
       <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
         cdkAutosizeMaxRows="5" placeholder="Enter summary" [(ngModel)]="FicSummary"></textarea>
     </mat-form-field>
+    <mat-button-toggle-group name="results" aria-label="Number of Results" [(ngModel)]="NumRes">
+      <mat-button-toggle value=20>20</mat-button-toggle>
+      <mat-button-toggle value=50>50</mat-button-toggle>
+      <mat-button-toggle value=100>100</mat-button-toggle>
+    </mat-button-toggle-group>
   </mat-grid-tile>
 
   <mat-grid-tile [colspan]="3" [rowspan]="1" [style.align-items]="'center'">
-    <button class="submit" mat-button color="primary" (click)="getFanfiction(FicTitle, FicAuthor, FicSummary, chars, rels, addTags, Fandom)">
+    <button class="submit" mat-button color="primary"
+      (click)="getFanfiction(FicTitle, FicAuthor, FicSummary, chars, rels, addTags, Fandom)">
       Submit
     </button>
   </mat-grid-tile>
 
-  <mat-grid-tile *ngFor="let fic of fic| paginate: {
-    itemsPerPage: pageSize,
-    currentPage: page,
-    totalItems: numOfFics }" colspan="2" rowspan="3" class="Output">
-    <mat-card style="width: 70%; margin-left: 20%;" role="article">
-      <mat-card-title> {{fic.title}} by {{fic.author}}</mat-card-title>
-      <mat-chip-listbox>
-        <mat-chip-row *ngFor="let tag of fic.tags">
-          {{tag}}
-        </mat-chip-row>
-      </mat-chip-listbox>
-      <mat-card-content [style]=" 'font-size: 14pt' ">
-        {{fic.summary}}
-      </mat-card-content>
-    </mat-card>
-
-  </mat-grid-tile>
-
-  <mat-grid-tile *ngIf="fic.length > 1">
-    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)">
-    </pagination-controls>
-  </mat-grid-tile>
-
 </mat-grid-list>
+
+<div class="Output" fxLayout="column" fxLayoutAlign="center center" style="margin-left: 20%; width: 70%">
+  <mat-card *ngFor="let fic of fic| paginate: {
+      itemsPerPage: pageSize,
+      currentPage: page,
+      totalItems: numOfFics }" role="article" style="margin-bottom: 4%;">
+    <mat-card-title> <a [routerLink]="['/fanfiction', fic.url]"> {{fic.title}} </a> by {{fic.author}}</mat-card-title>
+    <mat-chip-listbox>
+      <mat-chip-row *ngFor="let tag of fic.tags">
+        {{tag}}
+      </mat-chip-row>
+    </mat-chip-listbox>
+    <mat-card-content [style]=" 'font-size: 14pt' ">
+      {{fic.summary}}
+    </mat-card-content>
+  </mat-card>
+
+</div>
+
+<div *ngIf="fic.length > 1">
+  <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
+    (pageChange)="handlePageChange($event)">
+  </pagination-controls>
+</div>

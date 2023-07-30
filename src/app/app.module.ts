@@ -11,6 +11,7 @@ import { NavigationComponent } from './navigation/navigation.component';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +24,8 @@ import { SharedModule } from './shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { FanfictionReadComponent } from './fanfiction-read/fanfiction-read.component';
 
 @NgModule({
   declarations: [
@@ -30,13 +33,15 @@ import { NgxPaginationModule } from 'ngx-pagination';
     HomeComponent,
     SearchComponent,
     CollectionsComponent,
-    NavigationComponent
+    NavigationComponent,
+    FanfictionReadComponent,
   ],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    MatAutocompleteModule,
     ReactiveFormsModule,
     AppRoutingModule,
     MatButtonModule,
@@ -49,6 +54,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     MatCardModule,
     MatChipsModule,
     TextFieldModule,
+    MatButtonToggleModule,
     SharedModule
   ],
   providers: [],
