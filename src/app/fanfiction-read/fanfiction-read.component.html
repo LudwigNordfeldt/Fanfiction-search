@@ -1,5 +1,7 @@
 <p>fanfiction-read works!</p>
 
 <div *ngIf="fanfiction">
-  {{fanfiction}}
+  <p *ngFor="let text of fanfiction">
+    {{text}}
+  </p>
 </div>

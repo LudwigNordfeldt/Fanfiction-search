@@ -20,9 +20,9 @@ app.listen(port, () => {
 app.use(express.static(path.join(__dirname, "..", "dist", "fanfiction-search")))
 
 app.post('/getFictions', async(req:Request, res:Response) => {
-  let { FicTitle, FicAuthor, FicSummary, FicChars, FicRels, FicTags, Fandom } = req.body;
+  let { FicTitle, FicAuthor, FicSummary, FicChars, FicRels, FicTags, Fandom, NumRes } = req.body;
   const fic = new GetFics();
-  const fics = await fic.getFictions(FicTitle, FicAuthor, FicSummary, FicChars, FicRels, FicTags, Fandom);
+  const fics = await fic.getFictions(FicTitle, FicAuthor, FicSummary, FicChars, FicRels, FicTags, Fandom, NumRes);
   res.send(fics);
 })
 

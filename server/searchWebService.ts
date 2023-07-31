@@ -104,7 +104,7 @@ export class GetFics {
   }
 
   sanitizeString(str: string){
-    str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim,"");
+    str = str.replace(/[^a-z0-9áéíóúñü\-\"?!'., \.,_-]/gim,"");
     return str.trim();
   }
 
@@ -117,16 +117,15 @@ export class GetFics {
     await pageJQ.goto(url);
 
     const textField = await page.$$("div[role='article'] > div > p");
-    let text = ''
+    let text: any[];
+    text = [];
 
     for (let s of textField) {
       const sText = await (await s.getProperty('textContent')).jsonValue()
-      text += sText;
+      text.push(this.sanitizeString(sText!));
     }
 
-    text = this.sanitizeString(text);
-
-    return JSON.stringify(text)
+    return text
   }
 
   async getFictions(
@@ -136,15 +135,13 @@ export class GetFics {
     characters: string[],
     relationships: string[],
     filterTags: string[],
-    fandom: string
+    fandom: string,
+    fetchesNumber: number
   ) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
-    const pageJQ = pageExtend(page);
 
-    const preliminaryAO3 = 'https://archiveofourown.org/works/search';
-
-    const preliminaryFF = 'https://www.fanfiction.net/search/?popup=1';
+    //const preliminaryFF = 'https://www.fanfiction.net/search/?popup=1';
 
     const ao3url =
       `https://archiveofourown.org/works/search?commit=Search&work_search%5Bquery%5D=` +
@@ -164,13 +161,29 @@ export class GetFics {
         filterTags?.join(',') ?? ''
       }&work_search%5Bhits%5D=&work_search%5Bkudos_count%5D=&work_search%5Bcomments_count%5D=&work_search%5Bbookmarks_count%5D=&work_search%5Bsort_column%5D=_score&work_search%5Bsort_direction%5D=desc`;
 
-    const fnurl = `https://www.fanfiction.net/search/?keywords=Fire+Nation&type=story&match=any&formatid=any&sort=0&genreid1=0&genreid2=0&characterid1=0&characterid2=0&characterid3=0&characterid4=0&words=0&ready=1&categoryid=2002#`;
+    //const fnurl = `https://www.fanfiction.net/search/?keywords=Fire+Nation&type=story&match=any&formatid=any&sort=0&genreid1=0&genreid2=0&characterid1=0&characterid2=0&characterid3=0&characterid4=0&words=0&ready=1&categoryid=2002#`;
 
     await page.goto(ao3url);
 
-    let fics: Object[] = [];
+    const delay = (milliseconds: number | undefined) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
-    await this.fetchFictions(fics, page)
+    await delay(9000);
+
+    await page.waitForSelector('#tos_agree');
+
+    await page.click('#tos_agree');
+
+    await page.waitForSelector('#accept_tos');
+
+    await page.click('#accept_tos');
+
+    let fics: Object[] = [];
+    
+    for (let i = 0; i < fetchesNumber; i++) {
+      await page.waitForSelector('.next');
+      await this.fetchFictions(fics, page);
+      await page.click('.next');
+    }
 
     await browser.close();
     return fics;
