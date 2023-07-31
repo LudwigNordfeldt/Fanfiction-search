@@ -138,7 +138,7 @@ export class GetFics {
     fandom: string,
     fetchesNumber: number
   ) {
-    const browser = await puppeteer.launch({headless: false});
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
     //const preliminaryFF = 'https://www.fanfiction.net/search/?popup=1';
@@ -167,22 +167,30 @@ export class GetFics {
 
     const delay = (milliseconds: number | undefined) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
-    await delay(9000);
+    await delay(2000);
 
-    await page.waitForSelector('#tos_agree');
+    await page.waitForSelector('#tos_agree', {timeout: 2000});
 
-    await page.click('#tos_agree');
+    try {
+      await page.click('#tos_agree');
+    } catch (err) {}
 
-    await page.waitForSelector('#accept_tos');
+    await delay(300);
 
-    await page.click('#accept_tos');
+    await page.waitForSelector('#accept_tos', {timeout: 200});
+
+    try {
+      await page.click('#accept_tos');
+    } catch (err) {}
 
     let fics: Object[] = [];
     
     for (let i = 0; i < fetchesNumber; i++) {
       await page.waitForSelector('.next');
       await this.fetchFictions(fics, page);
-      await page.click('.next');
+      try {
+        await page.click('.next');
+      } catch (err) {}
     }
 
     await browser.close();
