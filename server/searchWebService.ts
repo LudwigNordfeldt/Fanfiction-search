@@ -24,10 +24,10 @@ export class GetFics {
     const fs = await pageJQ.$$(
       '#new_work_search > fieldset:nth-child(2) > dl > dd:nth-child(2) > ul > li > div > ul > li'
     );
-    return Promise.all(fs.map(async(f) => {
-        const ff = await f?.getProperty('textContent');
-        return ff?.toString().slice(9);
-      }));
+    return Promise.all(fs.map(async (f) => {
+      const ff = await f?.getProperty('textContent');
+      return ff?.toString().slice(9);
+    }));
   }
 
   async getTags(text: string) {
@@ -49,10 +49,10 @@ export class GetFics {
     const fs = await pageJQ.$$(
       '#new_work_search > fieldset:nth-child(2) > dl > dd:nth-child(14) > ul > li > div > ul > li'
     );
-    return Promise.all(fs.map(async(f) => {
-        const ff = await f?.getProperty('textContent');
-        return ff?.toString().slice(9);
-      }));
+    return Promise.all(fs.map(async (f) => {
+      const ff = await f?.getProperty('textContent');
+      return ff?.toString().slice(9);
+    }));
   }
 
   async getChars(text: string) {
@@ -73,10 +73,10 @@ export class GetFics {
     const fs = await pageJQ.$$(
       '#new_work_search > fieldset:nth-child(2) > dl > dd:nth-child(10) > ul > li > div > ul > li'
     );
-    return Promise.all(fs.map(async(f) => {
-        const ff = await f?.getProperty('textContent');
-        return ff?.toString().slice(9);
-      }));
+    return Promise.all(fs.map(async (f) => {
+      const ff = await f?.getProperty('textContent');
+      return ff?.toString().slice(9);
+    }));
   }
 
   async getRels(text: string) {
@@ -97,35 +97,103 @@ export class GetFics {
     const fs = await pageJQ.$$(
       '#new_work_search > fieldset:nth-child(2) > dl > dd:nth-child(12) > ul > li > div > ul > li'
     );
-    return Promise.all(fs.map(async(f) => {
-        const ff = await f?.getProperty('textContent');
-        return ff?.toString().slice(9);
-      }));
+    return Promise.all(fs.map(async (f) => {
+      const ff = await f?.getProperty('textContent');
+      return ff?.toString().slice(9);
+    }));
   }
 
-  sanitizeString(str: string){
-    str = str.replace(/[^a-z0-9áéíóúñü\-\"?!'., \.,_-]/gim,"");
+  sanitizeString(str: string) {
+    str = str.replace(/[^a-z0-9áéíóúñü\-\"?!'., \.,_-]/gim, "");
     return str.trim();
   }
 
-  async getFicText(url:string) {
-    // Todo: url-validation if url starts with https:archiveofourown.org
-
+  async getFicText(url: string) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    const pageJQ = pageExtend(page);
-    await pageJQ.goto(url);
+    await page.goto(url);
 
-    const textField = await page.$$("div[role='article'] > div > p");
-    let text: any[];
-    text = [];
+    const delay = (milliseconds: number | undefined) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
-    for (let s of textField) {
-      const sText = await (await s.getProperty('textContent')).jsonValue()
-      text.push(this.sanitizeString(sText!));
+    // await delay(2000);
+
+    // await page.waitForSelector('#tos_agree', { timeout: 2000 });
+
+    // try {
+    //   await page.click('#tos_agree');
+    // } catch (err) { }
+
+    // await delay(300);
+
+    // await page.waitForSelector('#accept_tos', { timeout: 200 });
+
+    // try {
+    //   await page.click('#accept_tos');
+    // } catch (err) { }
+
+
+    await delay(100);
+
+    let caution = await page.$('p.caution')
+
+    await delay(100);
+
+    if (caution) {
+      await page.click('#main > ul > li:nth-child(1)')
     }
 
-    return text
+    await delay(200);
+
+    let entire = await page.$('li.chapter.entire');
+
+    await delay(200);
+
+    if (entire) {
+      try {
+        await page.click('li.chapter.entire')
+      } catch (err) { }
+
+      console.log("Pressed")
+      await delay(1500);
+      const chapters = await page.$$('div#chapters > .chapter');
+
+      console.log("Chapters fetched:", chapters.length)
+
+      let full = [];
+
+      for (let c of chapters) {
+        const textField = await c.$$("div[role=article] > p");
+        let text: any[];
+        text = [];
+
+        for (let s of textField) {
+          const sText = await (await s.getProperty('textContent')).jsonValue();
+          text.push(this.sanitizeString(sText!));
+        }
+        full.push(text);
+      }
+      return full;
+    }
+    else {
+      console.log("Not pressed");
+      const textField = await page.$$("div[role='article'] > div > p");
+      let text: any[];
+      text = [];
+
+      let full = [];
+
+      for (let s of textField) {
+        const sText = await (await s.getProperty('textContent')).jsonValue();
+        text.push(this.sanitizeString(sText!));
+      }
+
+      full.push(text);
+
+      return full;
+    }
+
+    // div#chapters > .chapter
+
   }
 
   async getFictions(
@@ -147,18 +215,14 @@ export class GetFics {
       `https://archiveofourown.org/works/search?commit=Search&work_search%5Bquery%5D=` +
       `${summary ?? ''}&work_search%5Btitle%5D=` +
       `${title ?? ''}&work_search%5Bcreators%5D=` +
-      `${
-        author ?? ''
+      `${author ?? ''
       }&work_search%5Brevised_at%5D=&work_search%5Bcomplete%5D=&work_search%5Bcrossover%5D=&work_search%5Bsingle_chapter%5D=0&work_search%5Bword_count%5D=&work_search%5Blanguage_id%5D=&work_search%5Bfandom_names%5D=` +
-      `${
-        fandom ?? ''
+      `${fandom ?? ''
       }&work_search%5Brating_ids%5D=&work_search%5Bcharacter_names%5D=` +
-      `${characters?.join(',') ?? ''}&work_search%5Brelationship_names%5D=${
-        relationships?.map(rel => encodeURIComponent(rel))?.join(',') ?? ''
+      `${characters?.join(',') ?? ''}&work_search%5Brelationship_names%5D=${relationships?.map(rel => encodeURIComponent(rel))?.join(',') ?? ''
       }` +
       `&work_search%5Bfreeform_names%5D=` +
-      `${
-        filterTags?.join(',') ?? ''
+      `${filterTags?.join(',') ?? ''
       }&work_search%5Bhits%5D=&work_search%5Bkudos_count%5D=&work_search%5Bcomments_count%5D=&work_search%5Bbookmarks_count%5D=&work_search%5Bsort_column%5D=_score&work_search%5Bsort_direction%5D=desc`;
 
     //const fnurl = `https://www.fanfiction.net/search/?keywords=Fire+Nation&type=story&match=any&formatid=any&sort=0&genreid1=0&genreid2=0&characterid1=0&characterid2=0&characterid3=0&characterid4=0&words=0&ready=1&categoryid=2002#`;
@@ -169,28 +233,28 @@ export class GetFics {
 
     await delay(2000);
 
-    await page.waitForSelector('#tos_agree', {timeout: 2000});
+    await page.waitForSelector('#tos_agree', { timeout: 2000 });
 
     try {
       await page.click('#tos_agree');
-    } catch (err) {}
+    } catch (err) { }
 
     await delay(300);
 
-    await page.waitForSelector('#accept_tos', {timeout: 200});
+    await page.waitForSelector('#accept_tos', { timeout: 200 });
 
     try {
       await page.click('#accept_tos');
-    } catch (err) {}
+    } catch (err) { }
 
     let fics: Object[] = [];
-    
+
     for (let i = 0; i < fetchesNumber; i++) {
-      await page.waitForSelector('.next');
+      //await page.waitForSelector('.next');
       await this.fetchFictions(fics, page);
       try {
         await page.click('.next');
-      } catch (err) {}
+      } catch (err) { }
     }
 
     await browser.close();
@@ -243,7 +307,7 @@ export class GetFics {
           url: link
         };
         fics.push(fanfiction);
-      } catch (Exception) {}
+      } catch (Exception) { }
     }
   }
 

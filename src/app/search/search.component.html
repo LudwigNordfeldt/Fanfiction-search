@@ -156,14 +156,14 @@
 
     <mat-button-toggle-group name="results" aria-label="Number of Results" [(ngModel)]="NumRes">
       <label>Number of results</label>
-      <mat-button-toggle value=1 [checked]>20</mat-button-toggle>
+      <mat-button-toggle value=1 [checked]="true">20</mat-button-toggle>
       <mat-button-toggle value=2>40</mat-button-toggle>
       <mat-button-toggle value=5>100</mat-button-toggle>
     </mat-button-toggle-group>
 
     <mat-button-toggle-group name="page" aria-label="Results per page" [(ngModel)]="PageRes">
       <label>Results per page</label>
-      <mat-button-toggle value=5 [checked]>5</mat-button-toggle>
+      <mat-button-toggle value=5 [checked]="true">5</mat-button-toggle>
       <mat-button-toggle value=10>10</mat-button-toggle>
       <mat-button-toggle value=20>20</mat-button-toggle>
     </mat-button-toggle-group>

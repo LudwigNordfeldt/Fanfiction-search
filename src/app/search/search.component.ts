@@ -39,9 +39,11 @@ export class SearchComponent implements OnInit {
   FicRels?: string;
   FicTags?: string;
 
+
+  //NumRes - number of times fics will be fetched (1 time = 20 fics). Not recommended to set higher than 5
   numOfFics?: number;
-  NumRes?: number;
-  PageRes?: number;
+  NumRes?: number = 1;
+  PageRes?: number = 5;
 
   myControl = new FormControl('');
   filteredOptions?: Observable<string[]>;

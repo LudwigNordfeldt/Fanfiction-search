@@ -1,7 +1,18 @@
-<p>fanfiction-read works!</p>
-
 <div *ngIf="fanfiction">
-  <p *ngFor="let text of fanfiction">
-    {{text}}
-  </p>
+  <div *ngFor="let chapter of fanfiction|paginate: {
+    itemsPerPage: 1,
+    currentPage: page,
+    totalItems: chapterNumber
+  }">
+
+    <p *ngFor="let text of chapter">
+      {{text}}
+    </p>
+  </div>
+</div>
+
+<div *ngIf="chapterNumber && chapterNumber > 1">
+  <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
+    (pageChange)="handlePageChange($event)">
+  </pagination-controls>
 </div>
