@@ -98,7 +98,7 @@ export class SearchComponent implements OnInit {
 
   constructor(private http: HttpClient) {}
   async getFanfiction (FicTitle?: string, FicAuthor?: string, FicSummary?: string, FicChars?: string[], FicRels?: string[], FicTags?: string[], Fandom?: string, NumRes?: number) {
-    this.http.post('http://localhost:3000/getFictions', {FicTitle, FicAuthor, FicSummary, FicChars, FicRels, FicTags, Fandom, NumRes}).subscribe(res => {
+    this.http.post('/getFictions', {FicTitle, FicAuthor, FicSummary, FicChars, FicRels, FicTags, Fandom, NumRes}).subscribe(res => {
       this.fic = res;
       this.numOfFics = this.fic.length;
     });

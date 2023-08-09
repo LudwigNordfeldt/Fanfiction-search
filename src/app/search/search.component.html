@@ -1,37 +1,11 @@
-<mat-grid-list class="Input" cols="3" rowHeight="100pt">
-  <!-- <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows" [style.align-items]="'center'">
+<mat-grid-list class="Input w-screen" cols="3" rowHeight="100pt">
+  <mat-grid-tile [colspan]="3" [rowspan]="1">
+    <h3 class="text-7xl italic text-white">Search</h3>
+  </mat-grid-tile>
 
-    <mat-label> {{tile.text}} </mat-label>
-
-    <mat-form-field *ngIf="!tile.multiple && !tile.textArea">
-      <input matInput placeholder="{{ 'Enter ' + tile.text}}" [(ngModel)]="tile.text">
-    </mat-form-field>
-
-
-    <mat-form-field *ngIf="tile.textArea">
-      <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" placeholder="{{ 'Enter' + tile.text }}" [(ngModel)]="tile.text"></textarea>
-    </mat-form-field>
-
-      <div *ngIf="tile.multiple">
-        <mat-form-field class="chip-list" appearance="fill">
-          <mat-chip-grid #chipGrid cdk-scrollable>
-            <mat-chip-row *ngFor="let tag of tags" (removed)="remove(tag)" [editable]="true">
-              {{tag}}
-              <button matChipRemove [attr.aria-label]="'remove ' + tag">
-                <mat-icon>cancel</mat-icon>
-              </button>
-            </mat-chip-row>
-          </mat-chip-grid>
-          <input placeholder="New Tag..." #tagInput [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeyCodes" (matChipInputTokenEnd)="add($event)" />
-        </mat-form-field>
-      </div>
-  </mat-grid-tile> -->
-
-  <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
-    <mat-label [style.font-size.pt]="14"> Fandom </mat-label>
-
-    <mat-form-field>
+  <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'" class="flex flex-col justify-center items-center">
+    <mat-form-field class="w-5/6">
+      <mat-label [style.font-size.pt]="14" > Fandom </mat-label>
       <input matInput placeholder="Enter fandom" [(ngModel)]="Fandom" [matAutocomplete]="auto1"
         [formControl]="myControl">
       <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
@@ -43,19 +17,16 @@
   </mat-grid-tile>
 
   <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
-
-    <mat-label [style.font-size.pt]="14"> Title </mat-label>
-
-    <mat-form-field>
+    <mat-form-field class="w-5/6">
+      <mat-label [style.font-size.pt]="14"> Title </mat-label>
       <input matInput placeholder="Enter title" [(ngModel)]="FicTitle">
     </mat-form-field>
 
   </mat-grid-tile>
 
   <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
-    <mat-label [style.font-size.pt]="14"> Author </mat-label>
-
-    <mat-form-field>
+    <mat-form-field class="w-5/6">
+      <mat-label [style.font-size.pt]="14"> Author </mat-label>
       <input matInput placeholder="Enter author" [(ngModel)]="FicAuthor">
     </mat-form-field>
 
@@ -64,9 +35,8 @@
 
 
   <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
-    <mat-label [style.font-size.pt]="14"> Characters </mat-label>
-    <div>
-      <mat-form-field class="chip-list" appearance="fill">
+      <mat-form-field class="chip-list w-5/6" appearance="fill">
+        <mat-label [style.font-size.pt]="14"> Characters </mat-label>
         <mat-chip-grid #charGrid cdk-scrollable>
           <mat-chip-row *ngFor="let tag of chars" (removed)="removeChar(tag)" [editable]="true">
             {{tag}}
@@ -87,15 +57,13 @@
         </mat-autocomplete>
 
       </mat-form-field>
-    </div>
   </mat-grid-tile>
 
 
 
   <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
-    <mat-label [style.font-size.pt]="14"> Relationships </mat-label>
-    <div>
-      <mat-form-field class="chip-list" appearance="fill">
+      <mat-form-field class="chip-list w-5/6" appearance="fill">
+        <mat-label [style.font-size.pt]="14"> Relationships </mat-label>
         <mat-chip-grid #relsGrid cdk-scrollable>
           <mat-chip-row *ngFor="let tag of rels" (removed)="removeRel(tag)" [editable]="true">
             {{tag}}
@@ -115,14 +83,12 @@
         </mat-autocomplete>
 
       </mat-form-field>
-    </div>
   </mat-grid-tile>
 
 
   <mat-grid-tile [colspan]="1" [rowspan]="1" [style.align-items]="'center'">
-    <mat-label [style.font-size.pt]="14"> Additional Tags </mat-label>
-    <div>
-      <mat-form-field class="chip-list" appearance="fill">
+      <mat-form-field class="chip-list w-5/6" appearance="fill">
+        <mat-label [style.font-size.pt]="14"> Additional Tags </mat-label>
         <mat-chip-grid #chipGrid cdk-scrollable>
           <mat-chip-row *ngFor="let tag of addTags" (removed)="remove(tag)" [editable]="true">
             {{tag}}
@@ -142,35 +108,39 @@
         </mat-autocomplete>
 
       </mat-form-field>
+  </mat-grid-tile>
+
+
+
+  <mat-grid-tile [colspan]="3" [rowspan]="1" [style.align-items]="'center'">
+    <mat-form-field class="w-5/6">
+      <mat-label [style.font-size.pt]="14"> Summary </mat-label>
+      <textarea matInput placeholder="Enter summary" [(ngModel)]="FicSummary"></textarea>
+    </mat-form-field>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="3" [rowspan]="1" [style.align-items]="'center'">
+    <div class="flex flex-col m-3">
+      <label class="text-white">Number of results</label>
+      <mat-button-toggle-group name="results" aria-label="Number of Results" [(ngModel)]="NumRes">
+        <mat-button-toggle value=1 [checked]="true">20</mat-button-toggle>
+        <mat-button-toggle value=2>40</mat-button-toggle>
+        <mat-button-toggle value=5>100</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <div class="flex flex-col m-3">
+      <label class="text-white">Results per page</label>
+      <mat-button-toggle-group name="page" aria-label="Results per page" [(ngModel)]="PageRes">
+        <mat-button-toggle value=5 [checked]="true">5</mat-button-toggle>
+        <mat-button-toggle value=10>10</mat-button-toggle>
+        <mat-button-toggle value=20>20</mat-button-toggle>
+      </mat-button-toggle-group>
     </div>
   </mat-grid-tile>
 
-
-
   <mat-grid-tile [colspan]="3" [rowspan]="1" [style.align-items]="'center'">
-    <mat-label [style.font-size.pt]="14"> Summary </mat-label>
-    <mat-form-field>
-      <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
-        cdkAutosizeMaxRows="5" placeholder="Enter summary" [(ngModel)]="FicSummary"></textarea>
-    </mat-form-field>
-
-    <mat-button-toggle-group name="results" aria-label="Number of Results" [(ngModel)]="NumRes">
-      <label>Number of results</label>
-      <mat-button-toggle value=1 [checked]="true">20</mat-button-toggle>
-      <mat-button-toggle value=2>40</mat-button-toggle>
-      <mat-button-toggle value=5>100</mat-button-toggle>
-    </mat-button-toggle-group>
-
-    <mat-button-toggle-group name="page" aria-label="Results per page" [(ngModel)]="PageRes">
-      <label>Results per page</label>
-      <mat-button-toggle value=5 [checked]="true">5</mat-button-toggle>
-      <mat-button-toggle value=10>10</mat-button-toggle>
-      <mat-button-toggle value=20>20</mat-button-toggle>
-    </mat-button-toggle-group>
-  </mat-grid-tile>
-
-  <mat-grid-tile [colspan]="3" [rowspan]="1" [style.align-items]="'center'">
-    <button class="submit" mat-button color="primary"
+    <button class="submit" mat-raised-button color="warn"
       (click)="getFanfiction(FicTitle, FicAuthor, FicSummary, chars, rels, addTags, Fandom, NumRes)">
       Submit
     </button>
@@ -182,7 +152,7 @@
   <mat-card *ngFor="let fic of fic| paginate: {
       itemsPerPage: PageRes,
       currentPage: page,
-      totalItems: numOfFics }" role="article" style="margin-bottom: 4%;">
+      totalItems: numOfFics }" role="article" style="margin-bottom: 4%;" class="p-3">
     <mat-card-title> <a [routerLink]="['/fanfiction', fic.url]"> {{fic.title}} </a> by {{fic.author}}</mat-card-title>
     <mat-chip-listbox>
       <mat-chip-row *ngFor="let tag of fic.tags">
@@ -196,8 +166,8 @@
 
 </div>
 
-<div *ngIf="fic.length > 1">
+<div *ngIf="fic.length > 1" class="flex justify-center">
   <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
-    (pageChange)="handlePageChange($event)">
+    (pageChange)="handlePageChange($event)" style="background-color: white; border-radius: 32px;" class="p-3">
   </pagination-controls>
 </div>

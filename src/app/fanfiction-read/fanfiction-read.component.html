@@ -1,18 +1,21 @@
-<div *ngIf="fanfiction">
-  <div *ngFor="let chapter of fanfiction|paginate: {
-    itemsPerPage: 1,
-    currentPage: page,
-    totalItems: chapterNumber
-  }">
+<mat-spinner *ngIf="!fanfiction"></mat-spinner>
+<div *ngIf="fanfiction" class="flex flex-col max-w-6xl p-3 bg-yellow-950">
+  <div class="text-white">
+    <div *ngFor="let chapter of fanfiction|paginate: {
+      itemsPerPage: 1,
+      currentPage: page,
+      totalItems: chapterNumber
+    }">
 
-    <p *ngFor="let text of chapter">
-      {{text}}
-    </p>
+      <p *ngFor="let text of chapter">
+        {{text}}
+      </p>
+    </div>
   </div>
-</div>
 
-<div *ngIf="chapterNumber && chapterNumber > 1">
-  <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
-    (pageChange)="handlePageChange($event)">
-  </pagination-controls>
+  <div *ngIf="chapterNumber && chapterNumber > 1" class="flex justify-center">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
+      (pageChange)="handlePageChange($event)" style="background-color: white; border-radius: 32px;" class="p-3">
+    </pagination-controls>
+  </div>
 </div>

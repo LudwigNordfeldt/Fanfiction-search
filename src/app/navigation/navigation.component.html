@@ -1,17 +1,22 @@
 <mat-drawer-container class="navContainer" autosize>
-
-    <div class="navContent" #b>
-      <button mat-icon-button color="accent" aria-label="Example icon button with a menu icon" (click)="drawer.toggle()">
+  <mat-drawer-content>
+    <div style="position: fixed; left: 0; right: 0;" #b>
+      <button mat-icon-button color="accent" class="m-3" aria-label="Example icon button with a menu icon"
+        (click)="drawer.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
     </div>
+    <div class="w-screen">
+      <ng-content></ng-content>
+    </div>
 
-    <mat-drawer #drawer class="navDrawer" mode="side">
-      <ul>
-        <li> <button mat-button routerLink="/" > Home </button></li>
-        <li> <button mat-button routerLink="/search"> Search</button></li>
-        <li> <button mat-button routerLink="/collections"> Collections</button></li>
-      </ul>
-    </mat-drawer>
+  </mat-drawer-content>
+  <mat-drawer #drawer class="navDrawer p-6 bg-red-500" mode="over">
+    <ul>
+      <li> <button mat-button routerLink="/"> Home </button></li>
+      <li> <button mat-button routerLink="/search"> Search</button></li>
+      <li> <button mat-button routerLink="/collections"> Collections</button></li>
+    </ul>
+  </mat-drawer>
 
 </mat-drawer-container>

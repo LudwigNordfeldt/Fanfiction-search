@@ -15,6 +15,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatCardModule } from '@angular/material/card';
@@ -26,6 +27,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FanfictionReadComponent } from './fanfiction-read/fanfiction-read.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,7 @@ import { FanfictionReadComponent } from './fanfiction-read/fanfiction-read.compo
     AppRoutingModule,
     MatButtonModule,
     MatIconModule,
+    MatFormFieldModule,
     MatInputModule,
     MatPaginatorModule,
     NgxPaginationModule,
@@ -55,6 +58,7 @@ import { FanfictionReadComponent } from './fanfiction-read/fanfiction-read.compo
     MatChipsModule,
     TextFieldModule,
     MatButtonToggleModule,
+    MatProgressSpinnerModule,
     SharedModule
   ],
   providers: [],

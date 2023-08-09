@@ -32,3 +32,10 @@ $theme: mat.define-light-theme((
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include mat.all-component-themes($theme);
+
+body {
+  background-image: url("/assets/Background.png");
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+}
